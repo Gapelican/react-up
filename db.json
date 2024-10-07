@@ -1,0 +1,40 @@
+{
+  "payments": [
+    {
+      "id": "728ed52f",
+      "amount": 100,
+      "status": "pending",
+      "email": "m@example.com"
+    },
+    {
+      "id": "89b6df7a",
+      "amount": 200,
+      "status": "completed",
+      "email": "a@example.com"
+    },
+    {
+      "id": "f8c2d7e1",
+      "amount": 150,
+      "status": "failed",
+      "email": "b@example.com"
+    },
+    {
+      "id": "a1c3f6e2",
+      "amount": 250,
+      "status": "pending",
+      "email": "c@example.com"
+    },
+    {
+      "id": "3e6b2d4c",
+      "amount": 300,
+      "status": "completed",
+      "email": "d@example.com"
+    },
+    {
+      "id": "9f7d5e1b",
+      "amount": 175,
+      "status": "pending",
+      "email": "e@example.com"
+    }
+  ]
+}
