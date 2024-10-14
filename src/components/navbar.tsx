@@ -277,7 +277,7 @@ const MenuItemComponent: React.FC<{
   )
 }
 
-export default function SidebarMenu() {
+export function SidebarMenu() {
   const [searchTerm, setSearchTerm] = useState('')
   const [expandedItems, setExpandedItems] = useState<string[]>([])
   const [favorites, setFavorites] = useState<Set<string>>(new Set())

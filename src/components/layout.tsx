@@ -1,7 +1,7 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
-import { SidebarMenu } from './navbar'
 
+import { SidebarMenu } from './navbar'
 const Layout: React.FC = () => {
   return (
     <div className="flex">
