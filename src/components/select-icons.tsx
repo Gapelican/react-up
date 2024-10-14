@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react'
-import { useInView } from 'react-intersection-observer'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { useState, useEffect } from "react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import {
   Dialog,
   DialogContent,
@@ -9,115 +8,53 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { ChevronDown, Search } from 'lucide-react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { library } from '@fortawesome/fontawesome-svg-core'
+} from "@/components/ui/dialog"
 import {
-  faCoffee,
-  faHeart,
-  faStar,
-  faUser,
-  faHome,
-  faCog,
-  faEnvelope,
-  faBook,
-  faMusic,
-  faCamera,
-  faCar,
-  faPlane,
-  faBicycle,
-  faTree,
-  faSun,
-  faMoon,
-  faCloud,
-  faUmbrella,
-  faFire,
-  faSnowflake,
-  faSearch,
-} from '@fortawesome/free-solid-svg-icons'
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
+import { ChevronDown, Search } from "lucide-react"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { library } from "@fortawesome/fontawesome-svg-core"
+import { 
+  faCoffee, faHeart, faStar, faUser, faHome, faCog, faEnvelope, faBook,
+  faMusic, faCamera, faCar, faPlane, faBicycle, faTree, faSun, faMoon,
+  faCloud, faUmbrella, faFire, faSnowflake, faSearch
+} from "@fortawesome/free-solid-svg-icons"
 
 // Add icons to the library
-library.add(
-  faCoffee,
-  faHeart,
-  faStar,
-  faUser,
-  faHome,
-  faCog,
-  faEnvelope,
-  faBook,
-  faMusic,
-  faCamera,
-  faCar,
-  faPlane,
-  faBicycle,
-  faTree,
-  faSun,
-  faMoon,
-  faCloud,
-  faUmbrella,
-  faFire,
-  faSnowflake,
-  faSearch,
-)
+library.add(faCoffee, faHeart, faStar, faUser, faHome, faCog, faEnvelope, faBook,
+  faMusic, faCamera, faCar, faPlane, faBicycle, faTree, faSun, faMoon,
+  faCloud, faUmbrella, faFire, faSnowflake, faSearch)
 
 export default function Component() {
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null)
-  const [icons, setIcons] = useState<string[]>([])
   const [filteredIcons, setFilteredIcons] = useState<string[]>([])
-  const [page, setPage] = useState(1)
-  const [ref, inView] = useInView()
+  const [currentPage, setCurrentPage] = useState(1)
   const [open, setOpen] = useState(false)
-  const [searchTerm, setSearchTerm] = useState('')
+  const [searchTerm, setSearchTerm] = useState("")
 
   const allIcons = [
-    'coffee',
-    'heart',
-    'star',
-    'user',
-    'home',
-    'cog',
-    'envelope',
-    'book',
-    'music',
-    'camera',
-    'car',
-    'plane',
-    'bicycle',
-    'tree',
-    'sun',
-    'moon',
-    'cloud',
-    'umbrella',
-    'fire',
-    'snowflake',
+    "coffee", "heart", "star", "user", "home", "cog", "envelope", "book",
+    "music", "camera", "car", "plane", "bicycle", "tree", "sun", "moon",
+    "cloud", "umbrella", "fire", "snowflake"
   ]
 
-  const loadMoreIcons = () => {
-    const startIndex = (page - 1) * 20
-    const newIcons = allIcons.slice(startIndex, startIndex + 20)
-    setIcons((prev) => [...prev, ...newIcons])
-    setPage((prev) => prev + 1)
-  }
+  const iconsPerPage = 12
+  const totalPages = Math.ceil(filteredIcons.length / iconsPerPage)
 
   useEffect(() => {
-    loadMoreIcons()
-  }, [])
-
-  useEffect(() => {
-    if (inView && icons.length < allIcons.length) {
-      loadMoreIcons()
-    }
-  }, [inView, icons.length])
-
-  useEffect(() => {
-    const filtered = icons.filter((icon) =>
-      icon.toLowerCase().includes(searchTerm.toLowerCase()),
+    const filtered = allIcons.filter(icon => 
+      icon.toLowerCase().includes(searchTerm.toLowerCase())
     )
     setFilteredIcons(filtered)
-  }, [searchTerm, icons])
+    setCurrentPage(1)
+  }, [searchTerm])
 
   const handleIconSelect = (icon: string) => {
     setSelectedIcon(icon)
@@ -126,8 +63,18 @@ export default function Component() {
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value)
-    setPage(1)
   }
+
+  const handlePageChange = (page: number, event: React.MouseEvent) => {
+    event.preventDefault()
+    event.stopPropagation()
+    setCurrentPage(page)
+  }
+
+  const paginatedIcons = filteredIcons.slice(
+    (currentPage - 1) * iconsPerPage,
+    currentPage * iconsPerPage
+  )
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -139,7 +86,7 @@ export default function Component() {
               {selectedIcon}
             </>
           ) : (
-            'Selecionar Ícone'
+            "Selecionar Ícone"
           )}
           <ChevronDown className="ml-2 h-4 w-4" />
         </Button>
@@ -152,32 +99,55 @@ export default function Component() {
           </DialogDescription>
         </DialogHeader>
         <div className="relative mb-4">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-gray-500" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-4 w-4" />
           <Input
             type="text"
             placeholder="Buscar ícones..."
             value={searchTerm}
             onChange={handleSearch}
-            className="w-full pl-10 pr-4"
+            className="pl-10 pr-4 w-full"
           />
         </div>
-        <ScrollArea className="h-[300px] pr-4">
-          <div className="grid grid-cols-4 gap-4 py-4">
-            {filteredIcons.map((icon) => (
-              <Button
-                key={icon}
-                variant="outline"
-                onClick={() => handleIconSelect(icon)}
-                className="flex h-[60px] w-full flex-col items-center justify-center"
-                title={icon}
-              >
-                <FontAwesomeIcon icon={icon} className="mb-1 text-2xl" />
-                <span className="text-xs">{icon}</span>
-              </Button>
+        <div className="grid grid-cols-4 gap-4 py-4">
+          {paginatedIcons.map((icon) => (
+            <Button
+              key={icon}
+              variant="outline"
+              onClick={() => handleIconSelect(icon)}
+              className="w-full h-[60px] flex flex-col items-center justify-center"
+              title={icon}
+            >
+              <FontAwesomeIcon icon={icon} className="text-2xl mb-1" />
+              <span className="text-xs">{icon}</span>
+            </Button>
+          ))}
+        </div>
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious 
+                onClick={(e) => handlePageChange(Math.max(1, currentPage - 1), e)}
+                className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+              />
+            </PaginationItem>
+            {[...Array(totalPages)].map((_, index) => (
+              <PaginationItem key={index}>
+                <PaginationLink
+                  onClick={(e) => handlePageChange(index + 1, e)}
+                  isActive={currentPage === index + 1}
+                >
+                  {index + 1}
+                </PaginationLink>
+              </PaginationItem>
             ))}
-            <div ref={ref} />
-          </div>
-        </ScrollArea>
+            <PaginationItem>
+              <PaginationNext 
+                onClick={(e) => handlePageChange(Math.min(totalPages, currentPage + 1), e)}
+                className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
       </DialogContent>
     </Dialog>
   )
